@@ -177,7 +177,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         "*** YOUR CODE HERE ***"
         def Max(gameState: GameState, depth, alpha=-9999, beta=9999):
             if depth == 0 or gameState.isWin() or gameState.isLose():
-                return gameState.getScore(), Directions.STOP
+                return self.evaluationFunction(gameState), Directions.STOP
             maxv = -9999
             act = Directions.STOP
             pac_actions = gameState.getLegalActions(0)
@@ -193,7 +193,7 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
 
         def Min(gameState: GameState, depth, i, alpha, beta):
             if depth == 0 or gameState.isWin() or gameState.isLose():
-                return gameState.getScore()
+                return self.evaluationFunction(gameState)
             minv = 9999
             ghost_actions = gameState.getLegalActions(i)
             if i == gameState.getNumAgents()-1:
