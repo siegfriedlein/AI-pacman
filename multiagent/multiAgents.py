@@ -163,8 +163,6 @@ class MinimaxAgent(MultiAgentSearchAgent):
             return minv
 
         m, action = Max(gameState, self.depth)
-        while action == Directions.STOP:
-            action = random.choice(gameState.getLegalActions(0))
         return action
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
@@ -177,7 +175,47 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
         Returns the minimax action using self.depth and self.evaluationFunction
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        def Max(gameState: GameState, depth, alpha=-9999, beta=9999):
+            if depth == 0 or gameState.isWin() or gameState.isLose():
+                return gameState.getScore(), Directions.STOP
+            maxv = -9999
+            act = Directions.STOP
+            pac_actions = gameState.getLegalActions(0)
+            for a in pac_actions:
+                m = Min(gameState.generateSuccessor(0, a), depth, 1, alpha, beta)
+                if m > maxv:
+                    maxv = m
+                    act = a
+                if m > beta:
+                    return m, act
+                alpha = max(alpha, m)
+            return maxv, act
+
+        def Min(gameState: GameState, depth, i, alpha, beta):
+            if depth == 0 or gameState.isWin() or gameState.isLose():
+                return gameState.getScore()
+            minv = 9999
+            ghost_actions = gameState.getLegalActions(i)
+            if i == gameState.getNumAgents()-1:
+                for a in ghost_actions:
+                    m, act = Max(gameState.generateSuccessor(i, a), depth-1, alpha, beta)
+                    if m < minv:
+                        minv = m
+                    if m < alpha:
+                        return m
+                    beta = min(beta, m)
+            else:
+                for a in ghost_actions:
+                    m = Min(gameState.generateSuccessor(i, a), depth, i+1, alpha, beta)
+                    if m < minv:
+                        minv = m
+                    if m < alpha:
+                        return m
+                    beta = min(beta, m)
+            return minv
+
+        m, action = Max(gameState, self.depth)
+        return action
 
 class ExpectimaxAgent(MultiAgentSearchAgent):
     """
