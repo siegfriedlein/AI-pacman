@@ -361,6 +361,7 @@ def runEpisode(agent, environment, discount, decision, display, message, pause, 
         actions = environment.getPossibleActions(state)
         if len(actions) == 0:
             message("EPISODE "+str(episode)+" COMPLETE: RETURN WAS "+str(returns)+"\n")
+            agent.stopEpisode()
             return returns
 
         # GET ACTION (USUALLY FROM AGENT)
@@ -380,6 +381,7 @@ def runEpisode(agent, environment, discount, decision, display, message, pause, 
 
         returns += reward * totalDiscount
         totalDiscount *= discount
+
 
     if 'stopEpisode' in dir(agent):
         agent.stopEpisode()
